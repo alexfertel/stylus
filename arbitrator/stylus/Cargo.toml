@@ -5,13 +5,19 @@ edition = "2021"
 
 [dependencies]
 arbutil = { path = "../arbutil/" }
-brotli = { path = "../brotli" }
+brotli = { path = "../brotli", default-features = false }
 caller-env = { path = "../caller-env", features = ["wasmer_traits"] }
-prover = { path = "../prover/", default-features = false, features = ["native"] }
+prover = { path = "../prover/", default-features = false, features = [
+  "native",
+] }
 wasmer = { path = "../tools/wasmer/lib/api" }
 wasmer-vm = { path = "../tools/wasmer/lib/vm/" }
 wasmer-types = { path = "../tools/wasmer/lib/types/" }
-wasmer-compiler-singlepass = { path = "../tools/wasmer/lib/compiler-singlepass", default-features = false, features = ["std", "unwind", "avx"] }
+wasmer-compiler-singlepass = { path = "../tools/wasmer/lib/compiler-singlepass", default-features = false, features = [
+  "std",
+  "unwind",
+  "avx",
+] }
 wasmer-compiler-cranelift = { path = "../tools/wasmer/lib/compiler-cranelift" }
 wasmer-compiler-llvm = { path = "../tools/wasmer/lib/compiler-llvm", optional = true }
 user-host-trait = { path = "../wasm-libraries/user-host-trait/" }
@@ -35,7 +41,10 @@ default = ["rayon", "singlepass_rayon"]
 llvm = ["dep:wasmer-compiler-llvm"]
 benchmark = []
 timings = []
-singlepass_rayon = ["prover/singlepass_rayon", "wasmer-compiler-singlepass/rayon"]
+singlepass_rayon = [
+  "prover/singlepass_rayon",
+  "wasmer-compiler-singlepass/rayon",
+]
 rayon = ["prover/rayon"]
 
 [lib]

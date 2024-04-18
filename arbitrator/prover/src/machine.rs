@@ -328,6 +328,7 @@ impl Module {
         let mut tables = Vec::new();
         let mut host_call_hooks = Vec::new();
         let bin_name = &bin.names.module;
+        // println!("{:?}", &bin.codes);
         for import in &bin.imports {
             let module = import.module;
             let have_ty = &bin.types[import.offset as usize];
@@ -335,6 +336,10 @@ impl Module {
                 Some(name) => (true, name),
                 None => (false, import.name),
             };
+
+            if import_name == "memory_grow" {
+                continue;
+            }
 
             let mut qualified_name = format!("{module}__{import_name}");
             qualified_name = qualified_name.replace(&['/', '.', '-'] as &[char], "_");
@@ -362,6 +367,7 @@ impl Module {
                 );
                 hostio
             } else {
+                // println!("{:?}", USER_IMPORTS.iter().collect::<Vec<_>>());
                 bail!(
                     "No such import {} in {} for {}",
                     import_name.red(),

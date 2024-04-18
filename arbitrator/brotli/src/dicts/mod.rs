@@ -32,24 +32,24 @@ struct ForceSync<T>(T);
 
 unsafe impl<T> Sync for ForceSync<T> {}
 
-lazy_static! {
-    /// Memoizes dictionary preperation.
-    static ref STYLUS_PROGRAM_DICT: ForceSync<*const EncoderPreparedDictionary> =
-        ForceSync(unsafe {
-            let data = Dictionary::StylusProgram.slice().unwrap();
-            let dict = BrotliEncoderPrepareDictionary(
-                BrotliSharedDictionaryType::Raw,
-                data.len() as c_int,
-                data.as_ptr(),
-                11,
-                None,
-                None,
-                ptr::null_mut(),
-            );
-            assert!(BrotliEncoderGetPreparedDictionarySize(dict) > 0); // check integrity
-            dict as _
-        });
-}
+// lazy_static! {
+//     /// Memoizes dictionary preperation.
+//     static ref STYLUS_PROGRAM_DICT: ForceSync<*const EncoderPreparedDictionary> =
+//         ForceSync(unsafe {
+//             let data = Dictionary::StylusProgram.slice().unwrap();
+//             let dict = BrotliEncoderPrepareDictionary(
+//                 BrotliSharedDictionaryType::Raw,
+//                 data.len() as c_int,
+//                 data.as_ptr(),
+//                 11,
+//                 None,
+//                 None,
+//                 ptr::null_mut(),
+//             );
+//             assert!(BrotliEncoderGetPreparedDictionarySize(dict) > 0); // check integrity
+//             dict as _
+//         });
+// }
 
 /// Brotli dictionary selection.
 #[derive(Clone, Copy, Debug, PartialEq, IntoPrimitive, TryFromPrimitive)]
@@ -75,7 +75,7 @@ impl Dictionary {
         level: u32,
     ) -> Result<Option<*const EncoderPreparedDictionary>, BrotliStatus> {
         Ok(match self {
-            Self::StylusProgram if level == 11 => Some(STYLUS_PROGRAM_DICT.0),
+            Self::StylusProgram if level == 11 => None,
             Self::StylusProgram => return Err(BrotliStatus::Failure),
             _ => None,
         })
